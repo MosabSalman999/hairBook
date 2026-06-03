@@ -12,5 +12,6 @@ fun UserEntity.toDomain(): User = User(
 fun User.toEntity(): UserEntity = UserEntity(
     id = id,
     displayName = displayName,
+    createdAt = System.currentTimeMillis(),
     email = email
 )

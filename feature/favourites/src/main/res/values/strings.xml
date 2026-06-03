@@ -1,0 +1,4 @@
+<resources>
+    <string name="favourites_title">Favourites</string>
+    <string name="favourites_placeholder">Saved styles placeholder.</string>
+</resources>

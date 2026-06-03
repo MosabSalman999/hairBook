@@ -1,0 +1,4 @@
+<resources>
+    <string name="browse_title">Durchsuchen</string>
+    <string name="browse_placeholder">Platzhalter fuer den Frisurenkatalog.</string>
+</resources>

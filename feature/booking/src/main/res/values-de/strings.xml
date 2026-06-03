@@ -1,0 +1,4 @@
+<resources>
+    <string name="booking_title">Buchung</string>
+    <string name="booking_placeholder">Buchungsplatzhalter fuer Version 1.</string>
+</resources>

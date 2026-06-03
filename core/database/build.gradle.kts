@@ -13,13 +13,17 @@ android {
     }
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 26
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {

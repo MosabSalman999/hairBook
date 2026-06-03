@@ -1,0 +1,4 @@
+<resources>
+    <string name="admin_title">لوحة الإدارة</string>
+    <string name="admin_placeholder">عنصر نائب لأدوات الإدارة.</string>
+</resources>

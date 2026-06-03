@@ -24,11 +24,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "HairBook"
 include(":app")
-include(":core:network")
 include(":core:database")
 include(":core:ui")
 include(":feature:auth")
-include(":feature:clients")
-include(":feature:appointments")
-include(":feature:gallery")
+include(":feature:browse")
+include(":feature:detail")
+include(":feature:finder")
+include(":feature:favourites")
+include(":feature:admin")
+include(":feature:booking")
 include(":feature:profile")

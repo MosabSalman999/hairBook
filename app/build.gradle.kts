@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.hairbook"
-        minSdk = 28
-        targetSdk = 36
+        minSdk = 26
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -43,12 +43,14 @@ android {
 
 dependencies {
     implementation(project(":core:database"))
-    implementation(project(":core:network"))
     implementation(project(":core:ui"))
     implementation(project(":feature:auth"))
-    implementation(project(":feature:clients"))
-    implementation(project(":feature:appointments"))
-    implementation(project(":feature:gallery"))
+    implementation(project(":feature:browse"))
+    implementation(project(":feature:detail"))
+    implementation(project(":feature:finder"))
+    implementation(project(":feature:favourites"))
+    implementation(project(":feature:admin"))
+    implementation(project(":feature:booking"))
     implementation(project(":feature:profile"))
 
     implementation(libs.androidx.core.ktx)
@@ -60,9 +62,16 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.coil.compose)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
     implementation(libs.hilt.android)
+    implementation(libs.kotlinx.serialization.json)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -21,6 +21,7 @@ class AuthRepositoryImpl @Inject constructor(
             UserEntity(
                 id = id,
                 displayName = displayName,
+                createdAt = System.currentTimeMillis(),
                 email = email
             )
         )

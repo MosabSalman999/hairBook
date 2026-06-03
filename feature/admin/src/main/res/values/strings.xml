@@ -1,0 +1,4 @@
+<resources>
+    <string name="admin_title">Admin panel</string>
+    <string name="admin_placeholder">Admin tools placeholder.</string>
+</resources>

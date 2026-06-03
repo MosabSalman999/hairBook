@@ -8,13 +8,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.hairbook.core.ui.component.HairBookButton
+import com.example.hairbook.feature.auth.R
 
 @Composable
 fun AuthScreen(
-    uiState: AuthUiState,
-    onEvent: (AuthUiEvent) -> Unit,
+    onContinue: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -23,15 +24,15 @@ fun AuthScreen(
             .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "HairBook", style = MaterialTheme.typography.headlineLarge)
+        Text(text = stringResource(R.string.auth_title), style = MaterialTheme.typography.headlineLarge)
         Text(
-            text = uiState.currentUserName ?: "Sign in to manage your salon clients.",
+            text = stringResource(R.string.auth_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
         )
         HairBookButton(
-            text = "Continue",
-            onClick = { onEvent(AuthUiEvent.SignInClicked) }
+            text = stringResource(R.string.auth_continue),
+            onClick = onContinue
         )
     }
 }

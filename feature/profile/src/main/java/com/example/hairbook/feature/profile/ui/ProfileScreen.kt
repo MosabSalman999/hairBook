@@ -9,25 +9,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.hairbook.core.ui.component.HairBookTopBar
+import com.example.hairbook.feature.profile.R
 
 @Composable
 fun ProfileScreen(
-    uiState: ProfileUiState,
-    onEvent: (ProfileUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = { HairBookTopBar(title = "Profile") }
+        topBar = { HairBookTopBar(title = stringResource(R.string.profile_title)) }
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding).padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = uiState.profile?.displayName ?: "HairBook User", style = MaterialTheme.typography.titleLarge)
-            Text(text = uiState.profile?.email ?: "No email connected", style = MaterialTheme.typography.bodyMedium)
+            Text(text = stringResource(R.string.profile_user_placeholder), style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(R.string.profile_email_placeholder), style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

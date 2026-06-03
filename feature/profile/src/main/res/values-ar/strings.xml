@@ -1,0 +1,5 @@
+<resources>
+    <string name="profile_title">الملف الشخصي</string>
+    <string name="profile_user_placeholder">مستخدم هير بوك</string>
+    <string name="profile_email_placeholder">لا يوجد بريد إلكتروني متصل</string>
+</resources>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="admin_title">Adminbereich</string>
+    <string name="admin_placeholder">Platzhalter fuer Admin-Werkzeuge.</string>
+</resources>

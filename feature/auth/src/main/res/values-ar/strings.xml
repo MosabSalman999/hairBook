@@ -1,0 +1,5 @@
+<resources>
+    <string name="auth_title">هير بوك</string>
+    <string name="auth_subtitle">عنصر نائب لتسجيل الدخول في إعداد الإصدار الأول.</string>
+    <string name="auth_continue">متابعة</string>
+</resources>

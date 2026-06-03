@@ -1,0 +1,5 @@
+<resources>
+    <string name="profile_title">Profile</string>
+    <string name="profile_user_placeholder">Hair Book user</string>
+    <string name="profile_email_placeholder">No email connected</string>
+</resources>

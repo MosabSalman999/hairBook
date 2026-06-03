@@ -1,0 +1,5 @@
+<resources>
+    <string name="auth_title">Hair Book</string>
+    <string name="auth_subtitle">Platzhalter fuer die Anmeldung in Version 1.</string>
+    <string name="auth_continue">Weiter</string>
+</resources>

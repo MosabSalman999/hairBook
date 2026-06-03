@@ -6,40 +6,43 @@
 
 ## Current Status
 
-**Phase:** 0 — Reconciliation needed
-**Last updated:** 2026-06-03
-**Last session summary:** Repository inspected. A compiling Android multi-module project already exists, but it does not match the Hair Book v1 architecture in AGENTS.md. `:app:assembleDebug` completed successfully before this update.
+**Phase:** 2 — Data layer partially done (entities + DAOs complete; domain layer + repositories pending)
+**Last updated:** 2026-06-04
+**Last session summary:** `:core:database` schema fully replaced with v1 spec. All three off-spec entities (Client, Appointment, GalleryPhoto) and their DAOs deleted. `HairstyleEntity`, `FavouriteEntity`, and updated `UserEntity` written. `HairstyleDao` and `FavouriteDao` written. `HairBookDatabase` and `DatabaseModule` rebuilt to reference only v1 types. Build verified: `BUILD SUCCESSFUL` with all tasks executed (not cached).
 
-**Verified build output:**
+**Verified build output (`.\gradlew.bat :app:assembleDebug --no-daemon --max-workers=1 --console plain`):**
 ```
-BUILD SUCCESSFUL in 1m 45s
-222 actionable tasks: 10 executed, 212 up-to-date
+BUILD SUCCESSFUL in 4m 56s
+250 actionable tasks: 250 executed
 ```
 
-**Current baseline found:**
-- Android project exists with `:app`, `:core:database`, `:core:network`, `:core:ui`, `:feature:auth`, `:feature:clients`, `:feature:appointments`, `:feature:gallery`, and `:feature:profile`.
-- `HairBookApplication.kt` is configured with `@HiltAndroidApp`.
-- `MainActivity.kt` is configured as the single Activity host and renders `HairBookApp()`.
-- Navigation currently starts at auth and routes to clients, appointments, gallery, and profile.
-- No source `.java` files were found.
-- No `res/layout/*.xml` files were found.
-- Only English strings exist at `app/src/main/res/values/strings.xml`.
+**Verified lint output (`.\gradlew.bat lint --no-daemon --max-workers=1 --console plain`):**
+```
+BUILD SUCCESSFUL in 2m 53s
+441 actionable tasks: 180 executed, 261 up-to-date
+```
+
+**Current baseline:**
+- `:core:database` contains only v1 entities (`HairstyleEntity`, `FavouriteEntity`, `UserEntity`) and v1 DAOs (`HairstyleDao`, `FavouriteDao`, `UserDao`).
+- `HairBookDatabase` wired to all three v1 entities; `DatabaseModule` provides all three v1 DAOs.
+- No `core:domain` Gradle module exists yet — domain enums, models, and repository interfaces have no home.
+- `:core:ui` theme is still a skeleton (3 colour tokens, no Shape/Spacing/dark theme) — Phase 1 not yet started.
 
 ---
 
 ## Build Phases
 
-### Phase 0 · Project Setup 🟨 Partially done / off-spec
+### Phase 0 · Project Setup 🟨 Partially done
 - [x] Create Android project in Android Studio (Empty Activity, Kotlin, Compose)
-- [ ] Configure `build.gradle.kts` with all dependencies (Hilt, Room, Firebase, Coil, Navigation Compose, Kotlinx Serialization)
+- [x] Configure `build.gradle.kts` with all dependencies (Hilt, Room, Firebase, Coil, Navigation Compose, Kotlinx Serialization)
 - [ ] Add `google-services.json` from Firebase Console
 - [x] Configure `HairBookApplication.kt` with `@HiltAndroidApp`
 - [x] Configure `MainActivity.kt` as single-activity host
 - [x] Set up `AGENTS.md` in project root (copy from docs)
 - [ ] Add DM Serif Display + DM Sans fonts to `res/font/`
 - [x] Run first `./gradlew build` — must succeed before proceeding
-- [ ] Reconcile Gradle SDK values with AGENTS.md: min SDK 26, target SDK 34
-- [ ] Remove or replace off-spec modules before feature work: clients, appointments, gallery, generic network layer
+- [x] Reconcile Gradle SDK values with AGENTS.md: min SDK 26, target SDK 34
+- [x] Remove or replace off-spec modules before feature work: clients, appointments, gallery, generic network layer
 
 **Codex prompt to use:**
 ```
@@ -71,17 +74,18 @@ Run ./gradlew build and show output.
 
 ---
 
-### Phase 2 · Core: Data Layer ⬜ Not started
+### Phase 2 · Core: Data Layer 🟨 Partially done
 - [ ] Domain models: `Hairstyle.kt`, `Product.kt`, `User.kt`, all enums
 - [ ] Repository interfaces in `core/domain/repository/`
-- [ ] Room entities in `core/data/db/entity/`
-- [ ] DAOs: `HairstyleDao`, `FavouriteDao`, `UserDao`
-- [ ] `HairBookDatabase.kt` with seeding callback
+- [x] Room entities: `HairstyleEntity.kt`, `FavouriteEntity.kt`, `UserEntity.kt`
+- [x] DAOs: `HairstyleDao`, `FavouriteDao`, `UserDao`
+- [x] `HairBookDatabase.kt` wired to v1 entities (seeding callback deferred to repo impl step)
 - [ ] `hairstyles.json` asset file with 5 sample entries (men + women)
 - [ ] `JsonLoader.kt` utility
 - [ ] `HairstyleMapper.kt` (entity ↔ domain)
 - [ ] Repository implementations
-- [ ] Hilt modules: `DatabaseModule.kt`, `RepositoryModule.kt`
+- [x] `DatabaseModule.kt` providing all v1 DAOs
+- [ ] `RepositoryModule.kt`
 
 **Codex prompt to use:**
 ```
@@ -269,6 +273,10 @@ Run ./gradlew build. Show output.
 | Date | Phase | What was done | Next step |
 |------|-------|---------------|-----------|
 | 2026-06-03 | 0 | Repository inspected and baseline reconciled in this document. Existing project builds, but architecture is off-spec for Hair Book v1. | Reconcile Gradle SDK values with AGENTS.md, then rebuild. |
+| 2026-06-03 | 0 | Reconciled the Gradle module graph for v1: added browse/detail/finder/favourites/admin/booking placeholders, removed clients/appointments/gallery/network from the build, and verified `:app:assembleDebug`. | Implement Phase 1 design system tokens from DESIGN_SYSTEM.md. |
+| 2026-06-03 | 0 | Added missing Phase 0 dependency catalog entries and app dependencies for Firebase Auth, Coil 3, Kotlinx Serialization, Material icons, Turbine, and MockK. Ignored local `debug.log`. | Commit Phase 0 reconciliation, then implement Phase 1 design system tokens. |
+| 2026-06-04 | 2 | Replaced entire `:core:database` schema with v1 spec. Deleted 7 off-spec files (ClientEntity, AppointmentEntity, GalleryPhotoEntity + their DAOs + DateTimeConverters). Wrote HairstyleEntity (19 cols), FavouriteEntity (unique index on user+style), updated UserEntity (+role, is_guest, created_at). Wrote HairstyleDao and FavouriteDao. Rebuilt HairBookDatabase and DatabaseModule. Build verified `SUCCESSFUL` with all tasks executed. | Create `core:domain` Gradle module; write domain enums and models; write repository interfaces. |
+| 2026-06-04 | 0/2 | Clean build and lint both passed for the current v1 baseline. Fixed auth/profile user mapping to provide `createdAt` for the updated `UserEntity`. | Commit current v1 baseline; then continue with `core:domain` or Phase 1 design tokens. |
 
 ---
 
@@ -276,10 +284,12 @@ Run ./gradlew build. Show output.
 
 - Image assets for hairstyles not yet sourced — placeholder images needed for Phase 2 seeding
 - Arabic translations need a native speaker review before Phase 12
-- Firebase project not yet created — needed before Phase 4
+- Firebase project not yet created and `google-services.json` not present — needed before Phase 4. The Google Services plugin alias exists but is not applied to `:app` until the real JSON file is available.
+- DM Serif Display and DM Sans font files are not present yet — needed for Phase 1 typography.
 - Admin user seeding strategy not finalised (hardcoded email in AGENTS.md or a first-run flag?)
-- Current Gradle config uses min SDK 28 and target/compile SDK 36.x; AGENTS.md requires min SDK 26 and target SDK 34.
-- Current modules and navigation are for clients, appointments, gallery, and profile; AGENTS.md expects browse, detail, finder, favourites, auth, admin, and booking.
-- `core:network` and feature remote APIs conflict with the v1 offline-first rule, which allows no network calls except Firebase Auth.
-- Localisation is incomplete: only default English strings are present; Arabic and German resource folders are missing.
-- No Git repository existed before the 2026-06-03 reconciliation session.
+- Compile SDK remains on the installed SDK 36.1 because the local SDK Platform 34 install failed with `FileAlreadyExistsException`; min SDK is 26 and target SDK is 34 as required.
+- `android.disallowKotlinSourceSets=false` remains in `gradle.properties` because removing it currently breaks AGP/KSP configuration with built-in Kotlin source sets.
+- Off-spec source folders (`core/network`, `feature/clients`, `feature/appointments`, `feature/gallery`) remain on disk for now but are no longer included in `settings.gradle.kts` or app dependencies.
+- No `core:domain` Gradle module exists yet — domain enums, models (`Hairstyle.kt`, `User.kt`), and repository interfaces need a home before repository implementations can be written.
+- Firebase project is not configured and Firebase Auth dependencies are not wired yet.
+- Localisation for placeholder v1 modules exists in EN / AR / DE, but the full app still needs a localisation audit once real screens are implemented.

@@ -2,9 +2,8 @@ package com.example.hairbook.core.database
 
 import android.content.Context
 import androidx.room.Room
-import com.example.hairbook.core.database.dao.AppointmentDao
-import com.example.hairbook.core.database.dao.ClientDao
-import com.example.hairbook.core.database.dao.GalleryPhotoDao
+import com.example.hairbook.core.database.dao.FavouriteDao
+import com.example.hairbook.core.database.dao.HairstyleDao
 import com.example.hairbook.core.database.dao.UserDao
 import dagger.Module
 import dagger.Provides
@@ -27,14 +26,11 @@ object DatabaseModule {
     }
 
     @Provides
+    fun provideHairstyleDao(database: HairBookDatabase): HairstyleDao = database.hairstyleDao()
+
+    @Provides
+    fun provideFavouriteDao(database: HairBookDatabase): FavouriteDao = database.favouriteDao()
+
+    @Provides
     fun provideUserDao(database: HairBookDatabase): UserDao = database.userDao()
-
-    @Provides
-    fun provideClientDao(database: HairBookDatabase): ClientDao = database.clientDao()
-
-    @Provides
-    fun provideAppointmentDao(database: HairBookDatabase): AppointmentDao = database.appointmentDao()
-
-    @Provides
-    fun provideGalleryPhotoDao(database: HairBookDatabase): GalleryPhotoDao = database.galleryPhotoDao()
 }

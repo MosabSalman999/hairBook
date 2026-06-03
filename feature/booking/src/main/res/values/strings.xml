@@ -1,0 +1,4 @@
+<resources>
+    <string name="booking_title">Booking</string>
+    <string name="booking_placeholder">Booking placeholder for v1.</string>
+</resources>
