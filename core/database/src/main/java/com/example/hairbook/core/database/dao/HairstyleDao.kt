@@ -21,6 +21,9 @@ interface HairstyleDao {
     @Query("SELECT * FROM hairstyles WHERE id = :id")
     fun observeById(id: String): Flow<HairstyleEntity?>
 
+    @Query("SELECT COUNT(*) FROM hairstyles")
+    suspend fun countAll(): Int
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(styles: List<HairstyleEntity>)
 

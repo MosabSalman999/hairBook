@@ -6,14 +6,14 @@
 
 ## Current Status
 
-**Phase:** Phase 15 complete — category gradient images live on HomeScreen, build clean
+**Phase:** Phase 2 complete — data layer fully wired (JsonLoader, mapper, all 3 repo impls, RepositoryModule)
 **Last updated:** 2026-06-04
-**Last session summary:** Phase 15 delivered: 7 Android gradient drawable XMLs created in `feature/browse/src/main/res/drawable/` (one per category: fade gold-radial, undercut gold→black, textured navy diagonal, taper amber, bob rose-radial, curls forest-green, layers warm-gold). `CategoryCard` updated with optional `@DrawableRes imageRes` parameter — uses synchronous `painterResource()` when set (no Coil pipeline). `HomeScreen` `CategorySample` data class extended with `imageRes` field; all 7 entries wired to their `R.drawable.category_*` IDs. Build verified BUILD SUCCESSFUL. Next: HairstyleMapper.kt → HairstyleRepositoryImpl → RepositoryModule → use cases → ViewModel wiring.
+**Last session summary:** Phase 2 data layer completed. `JsonLoader` seeds Room from `hairstyles.json` on first launch; `HairstyleMapper` handles entity↔domain conversion (JSON array columns ↔ typed lists via `org.json`); `HairstyleRepositoryImpl`, `FavouriteRepositoryImpl`, `UserRepositoryImpl` all implement their domain interfaces and are bound via `RepositoryModule` (Hilt `@Binds` + `SingletonComponent`). `HairstyleDao` gained `countAll()`. `core:database/build.gradle.kts` now depends on `:core:domain`. Build verified SUCCESSFUL at 270 tasks. Next: wire repository into use cases + ViewModels for Browse, Detail, Favourites screens.
 
 **Verified build output (`.\gradlew.bat :app:assembleDebug --no-daemon --console plain`):**
 ```
-BUILD SUCCESSFUL in 1m 9s
-250 actionable tasks: 45 executed, 205 up-to-date
+BUILD SUCCESSFUL in 2m 44s
+270 actionable tasks: 82 executed, 188 up-to-date
 ```
 
 **Verified lint output (`.\gradlew.bat lint --no-daemon --max-workers=1 --console plain`):**
@@ -117,12 +117,12 @@ Run ./gradlew build and show output.
 - [x] Room entities: `HairstyleEntity.kt`, `FavouriteEntity.kt`, `UserEntity.kt`
 - [x] DAOs: `HairstyleDao`, `FavouriteDao`, `UserDao`
 - [x] `HairBookDatabase.kt` wired to v1 entities (seeding callback deferred to repo impl step)
-- [x] `hairstyles.json` asset file with 5 sample entries (men + women)
-- [ ] `JsonLoader.kt` utility
-- [ ] `HairstyleMapper.kt` (entity ↔ domain)
-- [ ] Repository implementations
+- [x] `hairstyles.json` asset file with 13 entries (men + women)
+- [x] `JsonLoader.kt` utility
+- [x] `HairstyleMapper.kt` (entity ↔ domain)
+- [x] Repository implementations (HairstyleRepositoryImpl, FavouriteRepositoryImpl, UserRepositoryImpl)
 - [x] `DatabaseModule.kt` providing all v1 DAOs
-- [ ] `RepositoryModule.kt`
+- [x] `RepositoryModule.kt`
 
 **Codex prompt to use:**
 ```
@@ -340,6 +340,7 @@ Run ./gradlew build. Show output.
 | 2026-06-04 | 14 | **Category navigation + image loading.** HomeScreen (category folder grid) replaces Browse as start destination. CategoryScreen added. HairBookImage (Coil 3 wrapper) and CategoryCard components created. HairstyleCard/DetailScreen upgraded to use HairBookImage. Hairstyle domain model + HairstyleEntity updated with `category` field (DB migration 1→2). hairstyles.json expanded to 13 entries. AppNavHost/AppDestination updated. Coil singleton configured in Application. Strings (EN/AR/DE) updated. docs updated. | Run `:app:assembleDebug` and verify navigation flow. |
 | 2026-06-04 | Build | **Fixed Gradle Sync stuck in a perpetual download loop.** Root cause: an uncommitted `gradle.properties` bump to `-Xmx4096m -XX:MaxMetaspaceSize=1024m` caused a native-OOM daemon crash mid distribution-download, leaving a stale `.lck` + `.part` and scattering in-project `GRADLE_USER_HOME` trees (Android Studio was using the project dir as its Gradle home). Reverted heap to baseline `-Xmx2048m` (now matches committed HEAD), cleared the stuck download + stray homes, repointed IDE Gradle home to `~/.gradle`. Verified `.\gradlew.bat help` → `BUILD SUCCESSFUL in 3s`, no re-download, no stray homes regenerated. See **Build / Sync Fixes** section above. | Wire ViewModels + use cases to screens; implement repository impls, JsonLoader, mappers, and `RepositoryModule` (Phase 2 remainder). |
 | 2026-06-04 | 15 | **Category gradient images.** Created 7 gradient drawable XMLs in `feature/browse/src/main/res/drawable/` (fade radial gold, undercut linear 270°, textured linear 45° navy, taper linear 180° amber, bob radial rose, curls linear 135° green, layers linear 225° warm-gold). Added optional `@DrawableRes imageRes: Int? = null` to `CategoryCard` — renders via synchronous `painterResource()`, bypassing Coil. Extended `HomeScreen.CategorySample` with `imageRes` and wired all 7 entries. Build `SUCCESSFUL` in 1m 9s, 250 tasks. | Implement HairstyleMapper + HairstyleRepositoryImpl + RepositoryModule (Phase 2 remainder). |
+| 2026-06-04 | 2 | **Phase 2 data layer complete.** `JsonLoader` (@Singleton, @ApplicationContext) seeds Room from `hairstyles.json` on first launch using `org.json`. `HairstyleMapper` extension functions convert `HairstyleEntity↔Hairstyle` (JSON string arrays ↔ typed enum/string lists). `HairstyleRepositoryImpl` seeding via `init` block (CoroutineScope + countAll check). `FavouriteRepositoryImpl` joins favourites+hairstyles via `combine`. `UserRepositoryImpl` wraps `UserDao`. `RepositoryModule` binds all three with `@Binds @Singleton`. `HairstyleDao.countAll()` added. `core:database/build.gradle.kts` adds `:core:domain` dep. Build `SUCCESSFUL` in 2m 44s, 270 tasks. | Wire repositories into use cases + ViewModels (Browse, Detail, Favourites). |
 
 ---
 

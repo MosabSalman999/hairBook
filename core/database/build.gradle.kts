@@ -27,10 +27,12 @@ ksp {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
     implementation(libs.hilt.android)
+    implementation(libs.kotlinx.coroutines.core)
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
 }
