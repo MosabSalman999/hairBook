@@ -3,6 +3,6 @@ package com.example.hairbook.feature.favourites.ui
 import androidx.compose.runtime.Composable
 
 @Composable
-fun FavouritesRoute() {
-    FavouritesScreen()
+fun FavouritesRoute(onNavigateToDetail: () -> Unit = {}) {
+    FavouritesScreen(onNavigateToDetail = onNavigateToDetail)
 }

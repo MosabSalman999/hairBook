@@ -1,4 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="browse_title">Durchsuchen</string>
-    <string name="browse_placeholder">Platzhalter fuer den Frisurenkatalog.</string>
+    <string name="browse_title">Hair Book</string>
+    <string name="browse_men">Männer</string>
+    <string name="browse_women">Frauen</string>
+    <string name="browse_search">Frisuren suchen…</string>
+    <string name="browse_filter_all">Alle</string>
+    <string name="browse_filter_curly">Lockig</string>
+    <string name="browse_filter_wavy">Wellig</string>
+    <string name="browse_filter_straight">Glatt</string>
+    <string name="browse_filter_short">Kurz</string>
+    <string name="browse_filter_medium">Mittel</string>
+    <string name="browse_filter_long">Lang</string>
 </resources>

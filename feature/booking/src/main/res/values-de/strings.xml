@@ -1,4 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="booking_title">Buchung</string>
-    <string name="booking_placeholder">Buchungsplatzhalter fuer Version 1.</string>
+    <string name="booking_coming_soon_title">Demnächst</string>
+    <string name="booking_coming_soon_subtitle">Buche Termine bei Top-Friseuren direkt aus der App — kommt in v2.</string>
+    <string name="booking_notify_me">Benachrichtigen</string>
+    <string name="booking_notify_email_hint">Deine E-Mail-Adresse</string>
 </resources>

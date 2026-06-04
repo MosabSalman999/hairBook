@@ -24,6 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "HairBook"
 include(":app")
+include(":core:domain")
 include(":core:database")
 include(":core:ui")
 include(":feature:auth")

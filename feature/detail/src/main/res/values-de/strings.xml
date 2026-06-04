@@ -1,4 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="detail_title">Frisurdetails</string>
-    <string name="detail_placeholder">Platzhalter fuer Frisurdetails.</string>
+    <string name="detail_about">Über diesen Stil</string>
+    <string name="detail_time_effort">Zeit &amp; Aufwand</string>
+    <string name="detail_time_label">Zeit</string>
+    <string name="detail_minutes">Min</string>
+    <string name="detail_difficulty">Schwierigkeit</string>
+    <string name="detail_products">Empfohlene Produkte</string>
+    <string name="detail_save">Zu Favoriten hinzufügen</string>
+    <string name="detail_saved">Gespeichert</string>
 </resources>

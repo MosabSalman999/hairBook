@@ -1,5 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="auth_title">هير بوك</string>
-    <string name="auth_subtitle">عنصر نائب لتسجيل الدخول في إعداد الإصدار الأول.</string>
-    <string name="auth_continue">متابعة</string>
+    <string name="auth_tagline">موسوعتك الشخصية لتسريحات الشعر</string>
+    <string name="auth_email">البريد الإلكتروني</string>
+    <string name="auth_password">كلمة المرور</string>
+    <string name="auth_forgot_password">نسيت كلمة المرور؟</string>
+    <string name="auth_sign_in">تسجيل الدخول</string>
+    <string name="auth_continue_guest">المتابعة كضيف</string>
+    <string name="auth_no_account">ليس لديك حساب؟</string>
+    <string name="auth_register">إنشاء حساب</string>
 </resources>

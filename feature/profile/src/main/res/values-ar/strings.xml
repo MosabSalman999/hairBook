@@ -1,5 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="profile_title">الملف الشخصي</string>
-    <string name="profile_user_placeholder">مستخدم هير بوك</string>
-    <string name="profile_email_placeholder">لا يوجد بريد إلكتروني متصل</string>
+    <string name="profile_guest_user">مستخدم ضيف</string>
+    <string name="profile_not_signed_in">غير مسجل الدخول</string>
+    <string name="profile_language">اللغة</string>
+    <string name="profile_admin_panel">لوحة الإدارة</string>
+    <string name="profile_booking">الحجز</string>
+    <string name="profile_sign_in">تسجيل الدخول / إنشاء حساب</string>
+    <string name="profile_sign_out">تسجيل الخروج</string>
 </resources>

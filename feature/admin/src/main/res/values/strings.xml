@@ -1,4 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="admin_title">Admin panel</string>
-    <string name="admin_placeholder">Admin tools placeholder.</string>
+    <string name="admin_title">Admin Panel</string>
+    <string name="admin_add">Add Hairstyle</string>
+    <string name="admin_edit">Edit</string>
+    <string name="admin_delete">Delete</string>
+    <string name="admin_styles_count">%d styles</string>
+    <string name="admin_reorder">Reorder</string>
 </resources>

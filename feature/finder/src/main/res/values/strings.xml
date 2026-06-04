@@ -1,4 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="finder_title">Style finder</string>
-    <string name="finder_placeholder">Questionnaire placeholder.</string>
+    <string name="finder_title">Style Finder</string>
+    <string name="finder_step">Step %1$d of %2$d</string>
+    <string name="finder_question_gender">Choose your look</string>
+    <string name="finder_question_face">What\'s your face shape?</string>
+    <string name="finder_question_texture">What\'s your hair texture?</string>
+    <string name="finder_question_length">What\'s your hair length?</string>
+    <string name="finder_question_thickness">What\'s your hair thickness?</string>
+    <string name="finder_question_colour">What\'s your hair colour?</string>
+    <string name="finder_next">Next</string>
+    <string name="finder_back">Back</string>
+    <string name="finder_see_results">See My Results</string>
 </resources>

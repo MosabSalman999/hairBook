@@ -1,5 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="profile_title">Profil</string>
-    <string name="profile_user_placeholder">Hair Book Benutzer</string>
-    <string name="profile_email_placeholder">Keine E-Mail verbunden</string>
+    <string name="profile_guest_user">Gastnutzer</string>
+    <string name="profile_not_signed_in">Nicht angemeldet</string>
+    <string name="profile_language">Sprache</string>
+    <string name="profile_admin_panel">Admin-Panel</string>
+    <string name="profile_booking">Buchung</string>
+    <string name="profile_sign_in">Anmelden / Registrieren</string>
+    <string name="profile_sign_out">Abmelden</string>
 </resources>

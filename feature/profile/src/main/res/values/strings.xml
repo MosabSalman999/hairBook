@@ -1,5 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="profile_title">Profile</string>
-    <string name="profile_user_placeholder">Hair Book user</string>
-    <string name="profile_email_placeholder">No email connected</string>
+    <string name="profile_guest_user">Guest User</string>
+    <string name="profile_not_signed_in">Not signed in</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_admin_panel">Admin Panel</string>
+    <string name="profile_booking">Booking</string>
+    <string name="profile_sign_in">Sign In / Register</string>
+    <string name="profile_sign_out">Sign Out</string>
 </resources>

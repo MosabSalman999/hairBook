@@ -1,5 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="auth_title">Hair Book</string>
-    <string name="auth_subtitle">Platzhalter fuer die Anmeldung in Version 1.</string>
-    <string name="auth_continue">Weiter</string>
+    <string name="auth_tagline">Deine persönliche Frisuren-Enzyklopädie</string>
+    <string name="auth_email">E-Mail</string>
+    <string name="auth_password">Passwort</string>
+    <string name="auth_forgot_password">Passwort vergessen?</string>
+    <string name="auth_sign_in">Anmelden</string>
+    <string name="auth_continue_guest">Als Gast fortfahren</string>
+    <string name="auth_no_account">Noch kein Konto?</string>
+    <string name="auth_register">Registrieren</string>
 </resources>

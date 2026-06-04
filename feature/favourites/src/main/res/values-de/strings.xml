@@ -1,4 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="favourites_title">Favoriten</string>
-    <string name="favourites_placeholder">Platzhalter fuer gespeicherte Frisuren.</string>
+    <string name="favourites_empty_title">Noch keine gespeicherten Stile</string>
+    <string name="favourites_empty_subtitle">Tippe auf das Herz bei einem Stil, um ihn hier zu speichern</string>
+    <string name="favourites_sign_in_prompt">Melde dich an, um Favoriten geräteübergreifend zu speichern</string>
 </resources>

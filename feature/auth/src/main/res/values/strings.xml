@@ -1,5 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="auth_title">Hair Book</string>
-    <string name="auth_subtitle">Sign in placeholder for v1 setup.</string>
-    <string name="auth_continue">Continue</string>
+    <string name="auth_tagline">Your personal hairstyle encyclopaedia</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_forgot_password">Forgot password?</string>
+    <string name="auth_sign_in">Sign In</string>
+    <string name="auth_continue_guest">Continue as Guest</string>
+    <string name="auth_no_account">Don\'t have an account?</string>
+    <string name="auth_register">Register</string>
 </resources>

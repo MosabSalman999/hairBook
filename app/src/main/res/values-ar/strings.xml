@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">هير بوك</string>
+    <string name="nav_browse">تصفح</string>
+    <string name="nav_finder">اكتشاف</string>
+    <string name="nav_favourites">المفضلة</string>
+    <string name="nav_profile">الملف الشخصي</string>
+</resources>

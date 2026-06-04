@@ -1,4 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="browse_title">تصفح</string>
-    <string name="browse_placeholder">عنصر نائب لكتالوج تسريحات الشعر.</string>
+    <string name="browse_title">هير بوك</string>
+    <string name="browse_men">رجال</string>
+    <string name="browse_women">نساء</string>
+    <string name="browse_search">ابحث عن تسريحات…</string>
+    <string name="browse_filter_all">الكل</string>
+    <string name="browse_filter_curly">مجعد</string>
+    <string name="browse_filter_wavy">مموج</string>
+    <string name="browse_filter_straight">مستقيم</string>
+    <string name="browse_filter_short">قصير</string>
+    <string name="browse_filter_medium">متوسط</string>
+    <string name="browse_filter_long">طويل</string>
 </resources>

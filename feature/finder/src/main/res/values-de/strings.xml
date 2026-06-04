@@ -1,4 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="finder_title">Stilfinder</string>
-    <string name="finder_placeholder">Platzhalter fuer den Fragebogen.</string>
+    <string name="finder_title">Stilberater</string>
+    <string name="finder_step">Schritt %1$d von %2$d</string>
+    <string name="finder_question_gender">Wähle deinen Look</string>
+    <string name="finder_question_face">Was ist deine Gesichtsform?</string>
+    <string name="finder_question_texture">Was ist deine Haartextur?</string>
+    <string name="finder_question_length">Wie lang ist dein Haar?</string>
+    <string name="finder_question_thickness">Wie dick ist dein Haar?</string>
+    <string name="finder_question_colour">Was ist deine Haarfarbe?</string>
+    <string name="finder_next">Weiter</string>
+    <string name="finder_back">Zurück</string>
+    <string name="finder_see_results">Meine Ergebnisse sehen</string>
 </resources>
