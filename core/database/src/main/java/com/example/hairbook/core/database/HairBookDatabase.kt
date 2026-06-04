@@ -15,7 +15,7 @@ import com.example.hairbook.core.database.entity.UserEntity
         FavouriteEntity::class,
         UserEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class HairBookDatabase : RoomDatabase() {

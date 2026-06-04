@@ -1,5 +1,7 @@
 package com.example.hairbook.core.ui.component
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,49 +15,61 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.hairbook.core.ui.theme.Black
 import com.example.hairbook.core.ui.theme.Gold
 import com.example.hairbook.core.ui.theme.GoldAlpha12
+import com.example.hairbook.core.ui.theme.GoldMuted
 import com.example.hairbook.core.ui.theme.SurfaceDark
-import com.example.hairbook.core.ui.theme.White
 
 @Composable
-fun HairstyleCard(
+fun CategoryCard(
     name: String,
-    tag: String,
-    accentColor: Color,
+    count: String,
+    coverImage: Any?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    imageUrl: Any? = null,
+    placeholderColor: Color = SurfaceDark,
+    @DrawableRes imageRes: Int? = null,
 ) {
     Card(
         onClick = onClick,
         modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(containerColor = SurfaceDark),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            HairBookImage(
-                model = imageUrl,
-                contentDescription = name,
-                modifier = Modifier.fillMaxSize(),
-                placeholderColor = accentColor.copy(alpha = 0.65f),
-            )
-            // Legibility scrim over bottom half
+            if (imageRes != null) {
+                Image(
+                    painter = painterResource(imageRes),
+                    contentDescription = name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                )
+            } else {
+                HairBookImage(
+                    model = coverImage,
+                    contentDescription = name,
+                    modifier = Modifier.fillMaxSize(),
+                    placeholderColor = placeholderColor,
+                )
+            }
+            // Bottom gradient scrim for text legibility
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
-                                0.35f to Color.Transparent,
-                                1.0f to Black.copy(alpha = 0.88f),
+                                0.3f to Color.Transparent,
+                                1.0f to Black.copy(alpha = 0.85f),
                             ),
                         ),
                     ),
             )
-            // Tag chip — top end
+            // Count badge — top end
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -64,16 +78,16 @@ fun HairstyleCard(
                     .padding(horizontal = 8.dp, vertical = 3.dp),
             ) {
                 Text(
-                    text = tag,
+                    text = count,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Gold,
+                    color = GoldMuted,
                 )
             }
-            // Style name — bottom start
+            // Category name — bottom start
             Text(
                 text = name,
-                style = MaterialTheme.typography.titleMedium,
-                color = White,
+                style = MaterialTheme.typography.titleLarge,
+                color = Gold,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(12.dp),

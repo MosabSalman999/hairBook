@@ -44,9 +44,18 @@ Most people choose a hairstyle by scrolling through Instagram or describing some
 - Language selection on first launch (AR / EN / DE)
 - "Continue as guest" or "Sign in / Register" options
 
-### 2. Home Screen
-- Two prominent entry points: Men | Women
+### 2. Home Screen (Category Discovery)
+- Gender tabs at top: Men | Women
+- 2-column staggered grid of category folder cards (e.g. Fade, Undercut, Bob, Curls)
+- Each card: cover image with gradient overlay, category name in gold, style count badge
+- Tapping a category folder navigates to the Category Screen
 - Navigation bar at the bottom: Browse · Finder · Favourites · Profile
+
+### 2b. Category Screen
+- Displays all hairstyles belonging to the tapped category
+- Back button in top bar returns to Home Screen
+- Same masonry (Pinterest-style) grid of hairstyle cards as the classic browse view
+- Tapping a card navigates to Detail Screen
 
 ### 3. Browse Screen (Men / Women)
 - Masonry (Pinterest-style) grid of hairstyle cards
@@ -139,6 +148,7 @@ Each hairstyle entry contains:
 | timeMinutes | Int | Estimated styling time |
 | difficulty | Int (1–5) | Effort level |
 | products | List<Product> | Recommended products |
+| category | String | Style category for grouping (e.g. "fade", "bob", "undercut") |
 | sortOrder | Int | Display order in catalogue |
 
 ---

@@ -6,6 +6,7 @@ data class Hairstyle(
     val nameAr: String,
     val nameDe: String,
     val gender: Gender,
+    val category: String,
     val heroImage: String,
     val gallery: List<String>,
     val descriptionEn: String,

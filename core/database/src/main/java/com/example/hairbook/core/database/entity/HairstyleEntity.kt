@@ -34,5 +34,7 @@ data class HairstyleEntity(
 
     @ColumnInfo(name = "products") val products: String,         // JSON array of {name, type}
 
+    @ColumnInfo(name = "category") val category: String,
+
     @ColumnInfo(name = "sort_order") val sortOrder: Int,
 )

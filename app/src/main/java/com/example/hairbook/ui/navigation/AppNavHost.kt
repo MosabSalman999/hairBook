@@ -18,10 +18,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.hairbook.R
 import com.example.hairbook.core.ui.theme.Gold
 import com.example.hairbook.core.ui.theme.GoldMuted
@@ -31,13 +33,15 @@ import com.example.hairbook.feature.admin.ui.AdminRoute
 import com.example.hairbook.feature.auth.ui.AuthRoute
 import com.example.hairbook.feature.booking.ui.BookingRoute
 import com.example.hairbook.feature.browse.ui.BrowseRoute
+import com.example.hairbook.feature.browse.ui.CategoryRoute
+import com.example.hairbook.feature.browse.ui.HomeRoute
 import com.example.hairbook.feature.detail.ui.DetailRoute
 import com.example.hairbook.feature.favourites.ui.FavouritesRoute
 import com.example.hairbook.feature.finder.ui.FinderRoute
 import com.example.hairbook.feature.profile.ui.ProfileRoute
 
 private val bottomNavDestinations = setOf(
-    AppDestination.Browse.route,
+    AppDestination.Home.route,
     AppDestination.Finder.route,
     AppDestination.Favourites.route,
     AppDestination.Profile.route,
@@ -58,10 +62,10 @@ fun AppNavHost() {
                     tonalElevation = 0.dp,
                 ) {
                     NavigationBarItem(
-                        selected = currentRoute == AppDestination.Browse.route,
+                        selected = currentRoute == AppDestination.Home.route,
                         onClick = {
-                            navController.navigate(AppDestination.Browse.route) {
-                                popUpTo(AppDestination.Browse.route) { saveState = true }
+                            navController.navigate(AppDestination.Home.route) {
+                                popUpTo(AppDestination.Home.route) { saveState = true }
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -74,7 +78,7 @@ fun AppNavHost() {
                         selected = currentRoute == AppDestination.Finder.route,
                         onClick = {
                             navController.navigate(AppDestination.Finder.route) {
-                                popUpTo(AppDestination.Browse.route) { saveState = true }
+                                popUpTo(AppDestination.Home.route) { saveState = true }
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -87,7 +91,7 @@ fun AppNavHost() {
                         selected = currentRoute == AppDestination.Favourites.route,
                         onClick = {
                             navController.navigate(AppDestination.Favourites.route) {
-                                popUpTo(AppDestination.Browse.route) { saveState = true }
+                                popUpTo(AppDestination.Home.route) { saveState = true }
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -100,7 +104,7 @@ fun AppNavHost() {
                         selected = currentRoute == AppDestination.Profile.route,
                         onClick = {
                             navController.navigate(AppDestination.Profile.route) {
-                                popUpTo(AppDestination.Browse.route) { saveState = true }
+                                popUpTo(AppDestination.Home.route) { saveState = true }
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -115,15 +119,31 @@ fun AppNavHost() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = AppDestination.Browse.route,
+            startDestination = AppDestination.Home.route,
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(AppDestination.Auth.route) {
                 AuthRoute(onSignedIn = {
-                    navController.navigate(AppDestination.Browse.route) {
+                    navController.navigate(AppDestination.Home.route) {
                         popUpTo(AppDestination.Auth.route) { inclusive = true }
                     }
                 })
+            }
+            composable(AppDestination.Home.route) {
+                HomeRoute(onNavigateToCategory = { categoryId ->
+                    navController.navigate(AppDestination.categoryRoute(categoryId))
+                })
+            }
+            composable(
+                route = AppDestination.Category.route,
+                arguments = listOf(navArgument("categoryId") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val categoryId = backStackEntry.arguments?.getString("categoryId") ?: ""
+                CategoryRoute(
+                    categoryId = categoryId,
+                    onNavigateToDetail = { navController.navigate(AppDestination.Detail.route) },
+                    onNavigateUp = { navController.navigateUp() },
+                )
             }
             composable(AppDestination.Browse.route) {
                 BrowseRoute(onNavigateToDetail = {
@@ -151,7 +171,7 @@ fun AppNavHost() {
                 ProfileRoute(
                     onNavigateToAuth = {
                         navController.navigate(AppDestination.Auth.route) {
-                            popUpTo(AppDestination.Browse.route) { inclusive = true }
+                            popUpTo(AppDestination.Home.route) { inclusive = true }
                         }
                     },
                     onNavigateToAdmin = { navController.navigate(AppDestination.Admin.route) },

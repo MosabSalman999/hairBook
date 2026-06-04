@@ -47,6 +47,7 @@ app/
 │   ├── domain/
 │   │   ├── model/
 │   │   │   ├── Hairstyle.kt         ← Pure Kotlin, no Android imports
+│   │   │   ├── HaircutCategory.kt   ← Category/folder domain model
 │   │   │   ├── Product.kt
 │   │   │   ├── User.kt
 │   │   │   └── enums/
@@ -78,7 +79,9 @@ app/
 │   │   │   └── Theme.kt             ← MaterialTheme wrapper
 │   │   └── components/
 │   │       ├── HairBookTopBar.kt
-│   │       ├── HairstyleCard.kt     ← Used in Browse + Favourites
+│   │       ├── HairBookImage.kt     ← Coil AsyncImage wrapper (crossfade, cache, placeholder)
+│   │       ├── HairstyleCard.kt     ← Used in Category + Favourites (uses HairBookImage)
+│   │       ├── CategoryCard.kt      ← Folder card used in HomeScreen
 │   │       ├── FilterChipRow.kt
 │   │       ├── AttributeChip.kt
 │   │       ├── LoadingScreen.kt
@@ -92,7 +95,11 @@ app/
 │
 ├── feature/
 │   ├── browse/
-│   │   ├── BrowseScreen.kt
+│   │   ├── HomeScreen.kt            ← Category folder grid (start destination)
+│   │   ├── HomeRoute.kt
+│   │   ├── CategoryScreen.kt        ← Haircuts within a selected category
+│   │   ├── CategoryRoute.kt
+│   │   ├── BrowseScreen.kt          ← Global masonry grid (search/filter mode)
 │   │   ├── BrowseViewModel.kt
 │   │   └── BrowseUiState.kt
 │   │
@@ -156,8 +163,9 @@ NavGraph
 │   └── forgot_password
 │
 └── main/                           (start destination if signed in / guest)
-    ├── home           ← gender selection landing
-    ├── browse/{gender}
+    ├── home                        ← category folder grid (bottom nav tab 1)
+    ├── category/{categoryId}       ← haircuts within a selected category
+    ├── browse/{gender}             ← global masonry grid (search/filter mode)
     ├── detail/{hairstyleId}
     ├── finder
     ├── finder_results
@@ -168,7 +176,7 @@ NavGraph
     └── booking_placeholder
 ```
 
-Bottom nav bar items: Browse · Finder · Favourites · Profile
+Bottom nav bar items: Home · Finder · Favourites · Profile
 
 ---
 
@@ -194,8 +202,10 @@ colours TEXT NOT NULL         -- JSON array
 time_minutes INTEGER NOT NULL
 difficulty INTEGER NOT NULL
 products TEXT NOT NULL        -- JSON array of {name, type}
+category TEXT NOT NULL        -- "fade" | "undercut" | "bob" | "curls" | "taper" | "layers" | "textured" | "braids"
 sort_order INTEGER NOT NULL
 ```
+DB version: 2 (Migration 1→2 adds `category` column with DEFAULT 'general')
 
 ### favourites table
 ```
@@ -290,6 +300,23 @@ Results sorted by descending matchPercentage. Styles below 30% are excluded.
 ```
 
 All ViewModels are annotated with `@HiltViewModel` and injected with `@Inject constructor(...)`.
+
+---
+
+## Image Loading
+
+Coil 3 (`coil-compose`) is the image library. The singleton `ImageLoader` is configured in `HairBookApplication.onCreate()`:
+- 300ms crossfade on every load
+- Memory cache: 25% of available RAM
+- Disk cache: enabled (default Coil cache directory)
+
+All image display goes through the `HairBookImage` composable in `core/ui/components/`. It wraps `AsyncImage` and enforces:
+- `ContentScale.Crop` default (thumbnails always fill their bounds)
+- `ColorPainter(placeholderColor)` while loading (no extra shimmer library)
+- `ColorPainter(SurfaceElevated)` on error
+- Caller must bound the composable with an explicit size or aspect ratio so Coil never decodes an oversized bitmap
+
+Image assets are stored in `app/src/main/assets/images/{gender}/{id}_hero.webp`. Coil loads them via the `file:///android_asset/` URI scheme. Until real images are added, `heroImage` in JSON is `"placeholder"` and `HairBookImage` renders the placeholder colour.
 
 ---
 

@@ -43,13 +43,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.hairbook.core.ui.component.HairBookImage
 import com.example.hairbook.core.ui.component.HairBookTopBar
 import com.example.hairbook.core.ui.theme.Black
 import com.example.hairbook.core.ui.theme.Gold
 import com.example.hairbook.core.ui.theme.GoldAlpha24
 import com.example.hairbook.core.ui.theme.GoldMuted
 import com.example.hairbook.core.ui.theme.GreyLight
-import com.example.hairbook.core.ui.theme.SurfaceDark
 import com.example.hairbook.core.ui.theme.White
 import com.example.hairbook.feature.detail.R
 
@@ -90,20 +90,17 @@ fun DetailScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
         ) {
-            // Hero image placeholder
+            // Hero image
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1.2f),
+                    .aspectRatio(4f / 3f),
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            Brush.verticalGradient(
-                                listOf(Color(0xFF4A3020).copy(alpha = 0.8f), SurfaceDark),
-                            ),
-                        ),
+                HairBookImage(
+                    model = null,
+                    contentDescription = "Classic Fade",
+                    modifier = Modifier.fillMaxSize(),
+                    placeholderColor = Color(0xFF4A3020).copy(alpha = 0.8f),
                 )
                 Box(
                     modifier = Modifier

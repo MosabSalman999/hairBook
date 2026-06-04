@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="home_title">Discover</string>
+    <string name="home_category_count">%d styles</string>
     <string name="browse_title">Hair Book</string>
     <string name="browse_men">Men</string>
     <string name="browse_women">Women</string>
@@ -11,4 +13,12 @@
     <string name="browse_filter_short">Short</string>
     <string name="browse_filter_medium">Medium</string>
     <string name="browse_filter_long">Long</string>
+    <string name="category_fade">Fade</string>
+    <string name="category_undercut">Undercut</string>
+    <string name="category_bob">Bob</string>
+    <string name="category_curls">Curls</string>
+    <string name="category_taper">Taper</string>
+    <string name="category_layers">Layers</string>
+    <string name="category_textured">Textured</string>
+    <string name="category_braids">Braids</string>
 </resources>
