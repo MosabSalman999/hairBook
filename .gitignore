@@ -20,3 +20,18 @@ local.properties
 hs_err_pid*.log
 replay_pid*.log
 debug.log
+
+# Claude Code tooling
+.claude/
+
+# Stray in-project GRADLE_USER_HOME artifacts (only ever created by a
+# misconfigured Gradle user home pointing into the project — see PROGRESS.md
+# "Build / Sync Fixes"). The real Gradle home is ~/.gradle.
+/caches/
+/daemon/
+/native/
+/notifications/
+/wrapper/
+/.tmp/
+/gradle/daemon/
+/gradle/wrapper/dists/
