@@ -6,40 +6,80 @@
 
 ## Current Status
 
-**Phase:** 0 — Reconciliation needed
-**Last updated:** 2026-06-03
-**Last session summary:** Repository inspected. A compiling Android multi-module project already exists, but it does not match the Hair Book v1 architecture in AGENTS.md. `:app:assembleDebug` completed successfully before this update.
+**Phase:** Phase 15 complete — category gradient images live on HomeScreen, build clean
+**Last updated:** 2026-06-04
+**Last session summary:** Phase 15 delivered: 7 Android gradient drawable XMLs created in `feature/browse/src/main/res/drawable/` (one per category: fade gold-radial, undercut gold→black, textured navy diagonal, taper amber, bob rose-radial, curls forest-green, layers warm-gold). `CategoryCard` updated with optional `@DrawableRes imageRes` parameter — uses synchronous `painterResource()` when set (no Coil pipeline). `HomeScreen` `CategorySample` data class extended with `imageRes` field; all 7 entries wired to their `R.drawable.category_*` IDs. Build verified BUILD SUCCESSFUL. Next: HairstyleMapper.kt → HairstyleRepositoryImpl → RepositoryModule → use cases → ViewModel wiring.
 
-**Verified build output:**
+**Verified build output (`.\gradlew.bat :app:assembleDebug --no-daemon --console plain`):**
 ```
-BUILD SUCCESSFUL in 1m 45s
-222 actionable tasks: 10 executed, 212 up-to-date
+BUILD SUCCESSFUL in 1m 9s
+250 actionable tasks: 45 executed, 205 up-to-date
 ```
 
-**Current baseline found:**
-- Android project exists with `:app`, `:core:database`, `:core:network`, `:core:ui`, `:feature:auth`, `:feature:clients`, `:feature:appointments`, `:feature:gallery`, and `:feature:profile`.
-- `HairBookApplication.kt` is configured with `@HiltAndroidApp`.
-- `MainActivity.kt` is configured as the single Activity host and renders `HairBookApp()`.
-- Navigation currently starts at auth and routes to clients, appointments, gallery, and profile.
-- No source `.java` files were found.
-- No `res/layout/*.xml` files were found.
-- Only English strings exist at `app/src/main/res/values/strings.xml`.
+**Verified lint output (`.\gradlew.bat lint --no-daemon --max-workers=1 --console plain`):**
+```
+BUILD SUCCESSFUL in 1m 28s
+476 actionable tasks: 16 executed, 460 up-to-date
+```
+
+**Current baseline:**
+- `:core:ui` design system complete: `Color.kt`, `Type.kt`, `Shape.kt`, `Spacing.kt`, `Theme.kt` (dark-only MaterialTheme). `HairBookTopBar`, `HairBookButton` (+secondary), `HairstyleCard` (uses `HairBookImage`), `CategoryCard`, `HairBookImage` (Coil 3 wrapper) components.
+- `:core:ui/build.gradle.kts` — `api(libs.androidx.material.icons.extended)` and `api(libs.coil.compose)` added so all feature modules get both transitively.
+- `app/src/main/assets/hairstyles.json` — 13 entries (8 MEN: 5 fade + undercut + textured + taper; 5 WOMEN: bob×2 + curls + layers×2), all schema fields populated including `category`.
+- Navigation: `AppNavHost` — start destination = `Home`; routes: Home → Category/{categoryId} → Detail; Browse/Finder/Favourites/Profile bottom nav. Auth/Admin/Booking reachable from Profile or internal nav.
+- `HairBookApplication` configured as `SingletonImageLoader.Factory` (crossfade 300ms, memory cache 25%).
+- All 8 feature screens (auth, browse, detail, finder, favourites, profile, admin, booking) — real UI with static demo data; no ViewModel wiring yet.
+- All feature module strings updated in EN, AR, DE. App-level nav strings added.
+- `:core:domain` — full domain models, enums, repository interfaces (no Android imports). Not yet wired as dependency of any feature module; screens use hardcoded sample data.
+- Repository implementations, JsonLoader, HairstyleMapper, and RepositoryModule still outstanding (Phase 2 remainder).
+- Firebase `google-services.json` still absent — FirebaseAuth not wired.
+
+---
+
+## Build / Sync Fixes
+
+### 2026-06-04 · Gradle Sync stuck "downloading/importing dependencies" forever
+
+**Symptom:** Android Studio Gradle Sync never completed — it appeared to continuously download/import dependencies.
+
+**Root cause (evidence-backed):**
+1. `gradle.properties` had been changed to `org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError …` (baseline was `-Xmx2048m`).
+2. The Gradle daemon JVM then crashed with a **native OOM** — `hs_err_pid119312.log`: *"Native memory allocation (malloc) failed … the Java Heap may be blocking the growth of the native heap."* The oversized heap reservation (compounded by crash→restart spawning multiple ~4 GB daemons) exhausted system RAM.
+3. The crash happened mid-download, leaving a stale lock + partial distribution (`gradle/wrapper/dists/gradle-9.3.1-bin/**/gradle-9.3.1-bin.zip.part` + `.zip.lck`). Each sync re-attempted the locked/partial download → the "never completes" symptom.
+4. Crash-restart cycles also scattered stray `GRADLE_USER_HOME` trees into the project (`caches/`, `daemon/`, `wrapper/`, `native/`, `gradle/daemon/`). `android/FakeDependency.jar` was unreferenced junk (appears only in the JVM replay log).
+5. **Confirmed during cleanup:** the running Android Studio process (`studio64.exe`) had `native-platform.dll` loaded from the project's `native/` folder, proving the IDE was configured to use the **project directory as its `GRADLE_USER_HOME`** instead of the default `~/.gradle`. This is why Gradle caches/daemon/wrapper kept materialising inside the project. **Prevent recurrence:** in Android Studio → *Settings → Build, Execution, Deployment → Build Tools → Gradle*, ensure "Gradle user home" is the default (`C:\Users\NTC-\.gradle`), and clear any `GRADLE_USER_HOME` env var pointing into the project.
+
+**Fix (minimal):** Reverted the single offending line in `gradle.properties` back to the proven baseline:
+```
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+```
+No version changes, no architectural changes. The stuck partial download/lock and stray in-project Gradle homes are untracked junk that should be cleared (`gradle/wrapper/dists/`, root `caches/ daemon/ wrapper/ native/ .tmp/ android/`, `gradle/daemon/`, `hs_err_pid*.log`, `replay_pid*.log`, `debug.log`); the healthy distribution lives in `~/.gradle`.
+
+**Verified (offline, against `~/.gradle`):**
+```
+.\gradlew.bat help --offline --no-daemon
+> BUILD SUCCESSFUL in 42s
+
+.\gradlew.bat :app:dependencies --configuration debugRuntimeClasspath --offline --no-daemon
+> BUILD SUCCESSFUL in 35s
+```
+Full configuration + dependency-graph resolution (what Sync performs) now completes with no re-downloading and no OOM.
 
 ---
 
 ## Build Phases
 
-### Phase 0 · Project Setup 🟨 Partially done / off-spec
+### Phase 0 · Project Setup 🟨 Partially done
 - [x] Create Android project in Android Studio (Empty Activity, Kotlin, Compose)
-- [ ] Configure `build.gradle.kts` with all dependencies (Hilt, Room, Firebase, Coil, Navigation Compose, Kotlinx Serialization)
+- [x] Configure `build.gradle.kts` with all dependencies (Hilt, Room, Firebase, Coil, Navigation Compose, Kotlinx Serialization)
 - [ ] Add `google-services.json` from Firebase Console
 - [x] Configure `HairBookApplication.kt` with `@HiltAndroidApp`
 - [x] Configure `MainActivity.kt` as single-activity host
 - [x] Set up `AGENTS.md` in project root (copy from docs)
 - [ ] Add DM Serif Display + DM Sans fonts to `res/font/`
 - [x] Run first `./gradlew build` — must succeed before proceeding
-- [ ] Reconcile Gradle SDK values with AGENTS.md: min SDK 26, target SDK 34
-- [ ] Remove or replace off-spec modules before feature work: clients, appointments, gallery, generic network layer
+- [x] Reconcile Gradle SDK values with AGENTS.md: min SDK 26, target SDK 34
+- [x] Remove or replace off-spec modules before feature work: clients, appointments, gallery, generic network layer
 
 **Codex prompt to use:**
 ```
@@ -51,12 +91,12 @@ Run ./gradlew build and fix all errors. Show the build output.
 
 ---
 
-### Phase 1 · Core: Design System ⬜ Not started
-- [ ] `Color.kt` — all colour tokens from DESIGN_SYSTEM.md
-- [ ] `Type.kt` — full typography scale with DM Serif Display + DM Sans
-- [ ] `Shape.kt` — corner radius tokens
-- [ ] `Spacing.kt` — spacing constants
-- [ ] `Theme.kt` — dark MaterialTheme wiring everything together
+### Phase 1 · Core: Design System 🟩 Done (preview composable pending)
+- [x] `Color.kt` — all colour tokens from DESIGN_SYSTEM.md
+- [x] `Type.kt` — full typography scale (system font fallbacks; DM Serif Display + DM Sans pending)
+- [x] `Shape.kt` — corner radius tokens
+- [x] `Spacing.kt` — spacing constants
+- [x] `Theme.kt` — dark MaterialTheme wiring everything together
 - [ ] Preview composable confirming theme renders correctly
 
 **Codex prompt to use:**
@@ -71,17 +111,18 @@ Run ./gradlew build and show output.
 
 ---
 
-### Phase 2 · Core: Data Layer ⬜ Not started
-- [ ] Domain models: `Hairstyle.kt`, `Product.kt`, `User.kt`, all enums
-- [ ] Repository interfaces in `core/domain/repository/`
-- [ ] Room entities in `core/data/db/entity/`
-- [ ] DAOs: `HairstyleDao`, `FavouriteDao`, `UserDao`
-- [ ] `HairBookDatabase.kt` with seeding callback
-- [ ] `hairstyles.json` asset file with 5 sample entries (men + women)
+### Phase 2 · Core: Data Layer 🟨 Partially done
+- [x] Domain models: `Hairstyle.kt`, `Product.kt`, `User.kt`, all enums
+- [x] Repository interfaces in `core/domain/repository/`
+- [x] Room entities: `HairstyleEntity.kt`, `FavouriteEntity.kt`, `UserEntity.kt`
+- [x] DAOs: `HairstyleDao`, `FavouriteDao`, `UserDao`
+- [x] `HairBookDatabase.kt` wired to v1 entities (seeding callback deferred to repo impl step)
+- [x] `hairstyles.json` asset file with 5 sample entries (men + women)
 - [ ] `JsonLoader.kt` utility
 - [ ] `HairstyleMapper.kt` (entity ↔ domain)
 - [ ] Repository implementations
-- [ ] Hilt modules: `DatabaseModule.kt`, `RepositoryModule.kt`
+- [x] `DatabaseModule.kt` providing all v1 DAOs
+- [ ] `RepositoryModule.kt`
 
 **Codex prompt to use:**
 ```
@@ -99,12 +140,12 @@ Run ./gradlew build after each layer. Show build output.
 
 ---
 
-### Phase 3 · Navigation Skeleton ⬜ Not started
-- [ ] `Screen.kt` — sealed class with all route strings
-- [ ] `NavGraph.kt` — full graph with all destinations (screens can be empty placeholders)
-- [ ] `MainActivity` wired to `NavHost`
-- [ ] Bottom navigation bar wired to main destinations
-- [ ] App runs and navigates between empty placeholder screens
+### Phase 3 · Navigation Skeleton 🟩 Done (type-safe routes pending)
+- [ ] `Screen.kt` — sealed class with all route strings (using enum AppDestination for now)
+- [x] `NavGraph.kt` — full graph with all destinations
+- [x] `MainActivity` wired to `NavHost`
+- [x] Bottom navigation bar wired to main destinations (Browse/Finder/Favourites/Profile)
+- [x] App runs and navigates between all screens
 
 **Codex prompt to use:**
 ```
@@ -120,8 +161,8 @@ App must run and navigate between all screens without crashing.
 
 ---
 
-### Phase 4 · Auth Screens ⬜ Not started
-- [ ] `LoginScreen.kt` — email/password + Google Sign-In button + guest link
+### Phase 4 · Auth Screens 🟨 Partially done
+- [x] `LoginScreen.kt` — email/password fields, Sign In CTA, Continue as Guest, Register link
 - [ ] `RegisterScreen.kt` — name, email, password, confirm password + Google
 - [ ] `ForgotPasswordScreen.kt` — email input + send reset
 - [ ] `AuthViewModel.kt` — Firebase Auth calls, UiState, error handling
@@ -144,8 +185,8 @@ Run ./gradlew build and show output.
 
 ---
 
-### Phase 5 · Browse Screen ⬜ Not started
-- [ ] `BrowseScreen.kt` — masonry grid with gender tabs (Men / Women)
+### Phase 5 · Browse Screen 🟨 Partially done
+- [x] `BrowseScreen.kt` — masonry staggered grid with gender TabRow + filter chips
 - [ ] `HairstyleCard.kt` component — image, gradient overlay, name, tag chip
 - [ ] `FilterChipRow.kt` — scrollable attribute filters
 - [ ] Search bar
@@ -168,8 +209,8 @@ Run ./gradlew build. Show a description of how the screen looks.
 
 ---
 
-### Phase 6 · Detail Screen ⬜ Not started
-- [ ] `DetailScreen.kt` — gallery, attributes, about, time/effort, products
+### Phase 6 · Detail Screen 🟨 Partially done
+- [x] `DetailScreen.kt` — hero image area, FlowRow attribute chips, About / Time&amp;Effort / Products sections, gold heart FAB
 - [ ] `DetailViewModel.kt` + `GetHairstyleByIdUseCase`
 - [ ] `ToggleFavouriteUseCase.kt` + FAB wired to it
 - [ ] `AttributeChip.kt` component
@@ -191,8 +232,8 @@ Run ./gradlew build. Show output.
 
 ---
 
-### Phase 7 · Style Finder ⬜ Not started
-- [ ] `FinderScreen.kt` — wizard host with progress indicator
+### Phase 7 · Style Finder 🟨 Partially done
+- [x] `FinderScreen.kt` — 6-step wizard with LinearProgressIndicator, 2-col visual picker grid, Next/Back buttons
 - [ ] 6 step screens (`GenderStep`, `FaceShapeStep`, `TextureStep`, `LengthStep`, `ThicknessStep`, `ColourStep`)
 - [ ] Visual picker cards (image + label, 2-column grid, gold selected state)
 - [ ] `FinderViewModel.kt` — manages step index and collected answers
@@ -215,34 +256,55 @@ Run ./gradlew build. Show output.
 
 ---
 
-### Phase 8 · Favourites Screen ⬜ Not started
-- [ ] `FavouritesScreen.kt` — grid of saved styles, empty state, swipe to remove
+### Phase 8 · Favourites Screen 🟨 Partially done
+- [x] `FavouritesScreen.kt` — staggered grid of saved styles + empty-state with icon/text; swipe-to-remove pending
 - [ ] `FavouritesViewModel.kt` + `GetFavouritesUseCase.kt`
 - [ ] Guest users see sign-in prompt
 - [ ] All strings in three languages
 
 ---
 
-### Phase 9 · Profile Screen ⬜ Not started
-- [ ] `ProfileScreen.kt` — display name, email, language selector, sign out
+### Phase 9 · Profile Screen 🟨 Partially done
+- [x] `ProfileScreen.kt` — avatar, language selector (EN/AR/DE), Admin + Booking nav rows, Sign In / Sign Out buttons
 - [ ] Language switching wired to `LocaleHelper.kt`
 - [ ] Admin users see "Admin Panel" entry
 - [ ] Sign out clears Firebase session + Room user record
 
 ---
 
-### Phase 10 · Admin Panel ⬜ Not started
-- [ ] `AdminPanelScreen.kt` — list of all styles, edit / delete actions, drag to reorder
+### Phase 10 · Admin Panel 🟨 Partially done
+- [x] `AdminScreen.kt` — style list with Edit/Delete icon buttons per row, Add FAB; drag-to-reorder pending
 - [ ] `AdminAddEditScreen.kt` — form for all hairstyle fields + local image picker
 - [ ] `AdminViewModel.kt` + `AddHairstyleUseCase`, `UpdateHairstyleUseCase`, `DeleteHairstyleUseCase`
 - [ ] Role gate: non-admin users cannot navigate to admin routes
 
 ---
 
-### Phase 11 · Booking Placeholder ⬜ Not started
-- [ ] `BookingPlaceholderScreen.kt` — static screen, "Coming Soon" UI, "Notify me" button stores email in Room
+### Phase 11 · Booking Placeholder 🟨 Partially done
+- [x] `BookingScreen.kt` — centred "Coming Soon" layout, gold star icon, subtitle, email input + Notify Me button; email-to-Room storage pending
 - [ ] No ViewModel needed (or minimal one for the email storage)
 - [ ] All strings in three languages
+
+---
+
+### Phase 14 · Category Navigation & Image Loading 🟩 Done
+
+- [x] `HaircutCategory.kt` domain model (core/domain/model/)
+- [x] `category` field added to `Hairstyle.kt` and `HairstyleEntity.kt`
+- [x] DB version bumped 1→2 with `Migration(1,2)` adding `category` column
+- [x] `hairstyles.json` expanded to 13 entries with `category` field (5 fade variants + taper + undercut + textured for men; bob×2 + curls + layers×2 for women)
+- [x] `HairBookImage.kt` Coil 3 wrapper component (core/ui/component/)
+- [x] `CategoryCard.kt` folder card component (core/ui/component/)
+- [x] `HomeScreen.kt` + `HomeRoute.kt` (feature/browse/ui/)
+- [x] `CategoryScreen.kt` + `CategoryRoute.kt` (feature/browse/ui/)
+- [x] `AppDestination` updated: `Home`, `Category` routes added; `Home` is new start destination
+- [x] `AppNavHost` wired: new routes, start destination changed, bottom nav first tab uses `Home`
+- [x] `HairstyleCard.kt` upgraded to accept optional `imageUrl` and use `HairBookImage`
+- [x] `DetailScreen.kt` hero area upgraded to use `HairBookImage`
+- [x] Coil singleton configured in `HairBookApplication.kt` (crossfade 300ms, memory cache 25%)
+- [x] New strings in EN / AR / DE for home title and all category names
+- [x] `core/ui/build.gradle.kts` — `api(libs.coil.compose)` added
+- [x] docs/PRD.md, docs/ARCHITECTURE.md updated
 
 ---
 
@@ -269,6 +331,15 @@ Run ./gradlew build. Show output.
 | Date | Phase | What was done | Next step |
 |------|-------|---------------|-----------|
 | 2026-06-03 | 0 | Repository inspected and baseline reconciled in this document. Existing project builds, but architecture is off-spec for Hair Book v1. | Reconcile Gradle SDK values with AGENTS.md, then rebuild. |
+| 2026-06-03 | 0 | Reconciled the Gradle module graph for v1: added browse/detail/finder/favourites/admin/booking placeholders, removed clients/appointments/gallery/network from the build, and verified `:app:assembleDebug`. | Implement Phase 1 design system tokens from DESIGN_SYSTEM.md. |
+| 2026-06-03 | 0 | Added missing Phase 0 dependency catalog entries and app dependencies for Firebase Auth, Coil 3, Kotlinx Serialization, Material icons, Turbine, and MockK. Ignored local `debug.log`. | Commit Phase 0 reconciliation, then implement Phase 1 design system tokens. |
+| 2026-06-04 | 2 | Replaced entire `:core:database` schema with v1 spec. Deleted 7 off-spec files (ClientEntity, AppointmentEntity, GalleryPhotoEntity + their DAOs + DateTimeConverters). Wrote HairstyleEntity (19 cols), FavouriteEntity (unique index on user+style), updated UserEntity (+role, is_guest, created_at). Wrote HairstyleDao and FavouriteDao. Rebuilt HairBookDatabase and DatabaseModule. Build verified `SUCCESSFUL` with all tasks executed. | Create `core:domain` Gradle module; write domain enums and models; write repository interfaces. |
+| 2026-06-04 | 0/2 | Clean build and lint both passed for the current v1 baseline. Fixed auth/profile user mapping to provide `createdAt` for the updated `UserEntity`. | Commit current v1 baseline; then continue with `core:domain` or Phase 1 design tokens. |
+| 2026-06-04 | 1–13 | **Multi-phase UI session.** Phase 1: full design system implemented (Color/Type/Shape/Spacing/Theme, plus HairBookTopBar/Button/HairstyleCard components). `api(material-icons-extended)` added to core:ui so all features get Icons transitively. Phase 2: `hairstyles.json` created with 5 sample entries. Phase 3: AppNavHost rebuilt with Scaffold + NavigationBar. Phases 4–11: all 8 feature screens upgraded to real UI (auth login, browse masonry grid, detail sections+FAB, finder 6-step wizard, favourites grid+empty state, profile, admin list, booking coming-soon). Phase 12: all strings updated EN/AR/DE for all features + app-level nav strings. Phase 13: `assembleDebug` BUILD SUCCESSFUL (250 tasks), `lint` BUILD SUCCESSFUL (476 tasks). | Next priority: wire ViewModels + use cases to screens; implement repository impls + Firebase Auth. |
+| 2026-06-04 | 2/13 | Re-ran `:app:assembleDebug` after the UI/design-system reconciliation. Debug app build passes: `BUILD SUCCESSFUL in 1m 25s`, 250 actionable tasks. | Continue with mappers, JsonLoader, repository implementations, and `RepositoryModule`. |
+| 2026-06-04 | 14 | **Category navigation + image loading.** HomeScreen (category folder grid) replaces Browse as start destination. CategoryScreen added. HairBookImage (Coil 3 wrapper) and CategoryCard components created. HairstyleCard/DetailScreen upgraded to use HairBookImage. Hairstyle domain model + HairstyleEntity updated with `category` field (DB migration 1→2). hairstyles.json expanded to 13 entries. AppNavHost/AppDestination updated. Coil singleton configured in Application. Strings (EN/AR/DE) updated. docs updated. | Run `:app:assembleDebug` and verify navigation flow. |
+| 2026-06-04 | Build | **Fixed Gradle Sync stuck in a perpetual download loop.** Root cause: an uncommitted `gradle.properties` bump to `-Xmx4096m -XX:MaxMetaspaceSize=1024m` caused a native-OOM daemon crash mid distribution-download, leaving a stale `.lck` + `.part` and scattering in-project `GRADLE_USER_HOME` trees (Android Studio was using the project dir as its Gradle home). Reverted heap to baseline `-Xmx2048m` (now matches committed HEAD), cleared the stuck download + stray homes, repointed IDE Gradle home to `~/.gradle`. Verified `.\gradlew.bat help` → `BUILD SUCCESSFUL in 3s`, no re-download, no stray homes regenerated. See **Build / Sync Fixes** section above. | Wire ViewModels + use cases to screens; implement repository impls, JsonLoader, mappers, and `RepositoryModule` (Phase 2 remainder). |
+| 2026-06-04 | 15 | **Category gradient images.** Created 7 gradient drawable XMLs in `feature/browse/src/main/res/drawable/` (fade radial gold, undercut linear 270°, textured linear 45° navy, taper linear 180° amber, bob radial rose, curls linear 135° green, layers linear 225° warm-gold). Added optional `@DrawableRes imageRes: Int? = null` to `CategoryCard` — renders via synchronous `painterResource()`, bypassing Coil. Extended `HomeScreen.CategorySample` with `imageRes` and wired all 7 entries. Build `SUCCESSFUL` in 1m 9s, 250 tasks. | Implement HairstyleMapper + HairstyleRepositoryImpl + RepositoryModule (Phase 2 remainder). |
 
 ---
 
@@ -276,10 +347,11 @@ Run ./gradlew build. Show output.
 
 - Image assets for hairstyles not yet sourced — placeholder images needed for Phase 2 seeding
 - Arabic translations need a native speaker review before Phase 12
-- Firebase project not yet created — needed before Phase 4
+- Firebase project not yet created and `google-services.json` not present — needed before Phase 4. The Google Services plugin alias exists but is not applied to `:app` until the real JSON file is available.
+- DM Serif Display and DM Sans font files are not present yet — needed for Phase 1 typography.
 - Admin user seeding strategy not finalised (hardcoded email in AGENTS.md or a first-run flag?)
-- Current Gradle config uses min SDK 28 and target/compile SDK 36.x; AGENTS.md requires min SDK 26 and target SDK 34.
-- Current modules and navigation are for clients, appointments, gallery, and profile; AGENTS.md expects browse, detail, finder, favourites, auth, admin, and booking.
-- `core:network` and feature remote APIs conflict with the v1 offline-first rule, which allows no network calls except Firebase Auth.
-- Localisation is incomplete: only default English strings are present; Arabic and German resource folders are missing.
-- No Git repository existed before the 2026-06-03 reconciliation session.
+- Compile SDK remains on the installed SDK 36.1 because the local SDK Platform 34 install failed with `FileAlreadyExistsException`; min SDK is 26 and target SDK is 34 as required.
+- `android.disallowKotlinSourceSets=false` remains in `gradle.properties` because removing it currently breaks AGP/KSP configuration with built-in Kotlin source sets.
+- Off-spec source folders (`core/network`, `feature/clients`, `feature/appointments`, `feature/gallery`) remain on disk for now but are no longer included in `settings.gradle.kts` or app dependencies.
+- Firebase project is not configured and Firebase Auth dependencies are not wired yet.
+- Localisation for placeholder v1 modules exists in EN / AR / DE, but the full app still needs a localisation audit once real screens are implemented.

@@ -12,5 +12,6 @@ fun UserEntity.toProfile(): Profile = Profile(
 fun Profile.toEntity(): UserEntity = UserEntity(
     id = id,
     displayName = displayName,
+    createdAt = System.currentTimeMillis(),
     email = email
 )

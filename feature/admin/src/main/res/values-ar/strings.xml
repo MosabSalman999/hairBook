@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="admin_title">لوحة الإدارة</string>
+    <string name="admin_add">إضافة تسريحة</string>
+    <string name="admin_edit">تعديل</string>
+    <string name="admin_delete">حذف</string>
+    <string name="admin_styles_count">%d تسريحة</string>
+    <string name="admin_reorder">إعادة ترتيب</string>
+</resources>

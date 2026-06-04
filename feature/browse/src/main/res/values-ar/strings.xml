@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">اكتشف</string>
+    <string name="home_category_count">%d أسلوب</string>
+    <string name="browse_title">هير بوك</string>
+    <string name="browse_men">رجال</string>
+    <string name="browse_women">نساء</string>
+    <string name="browse_search">ابحث عن تسريحات…</string>
+    <string name="browse_filter_all">الكل</string>
+    <string name="browse_filter_curly">مجعد</string>
+    <string name="browse_filter_wavy">مموج</string>
+    <string name="browse_filter_straight">مستقيم</string>
+    <string name="browse_filter_short">قصير</string>
+    <string name="browse_filter_medium">متوسط</string>
+    <string name="browse_filter_long">طويل</string>
+    <string name="category_fade">تلاشي</string>
+    <string name="category_undercut">قص سفلي</string>
+    <string name="category_bob">باب</string>
+    <string name="category_curls">خصلات</string>
+    <string name="category_taper">تقليم</string>
+    <string name="category_layers">طبقات</string>
+    <string name="category_textured">مموج</string>
+    <string name="category_braids">ضفائر</string>
+</resources>

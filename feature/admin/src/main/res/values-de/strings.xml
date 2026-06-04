@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="admin_title">Admin-Panel</string>
+    <string name="admin_add">Frisur hinzufügen</string>
+    <string name="admin_edit">Bearbeiten</string>
+    <string name="admin_delete">Löschen</string>
+    <string name="admin_styles_count">%d Frisuren</string>
+    <string name="admin_reorder">Neu sortieren</string>
+</resources>

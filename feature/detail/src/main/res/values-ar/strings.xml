@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detail_title">تفاصيل التسريحة</string>
+    <string name="detail_about">عن هذه التسريحة</string>
+    <string name="detail_time_effort">الوقت والجهد</string>
+    <string name="detail_time_label">الوقت</string>
+    <string name="detail_minutes">دقيقة</string>
+    <string name="detail_difficulty">الصعوبة</string>
+    <string name="detail_products">المنتجات الموصى بها</string>
+    <string name="detail_save">حفظ في المفضلة</string>
+    <string name="detail_saved">محفوظ</string>
+</resources>

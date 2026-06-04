@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 26
     }
 
     compileOptions {
@@ -26,6 +26,8 @@ android {
 }
 
 dependencies {
+    api(libs.androidx.material.icons.extended)
+    api(libs.coil.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)

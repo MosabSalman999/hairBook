@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favourites_title">Favourites</string>
+    <string name="favourites_empty_title">No saved styles yet</string>
+    <string name="favourites_empty_subtitle">Tap the heart on any style to save it here</string>
+    <string name="favourites_sign_in_prompt">Sign in to save favourites across devices</string>
+</resources>

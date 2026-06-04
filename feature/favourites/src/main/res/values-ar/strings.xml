@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favourites_title">المفضلة</string>
+    <string name="favourites_empty_title">لا توجد تسريحات محفوظة بعد</string>
+    <string name="favourites_empty_subtitle">اضغط على القلب على أي تسريحة لحفظها هنا</string>
+    <string name="favourites_sign_in_prompt">سجل دخولك لحفظ المفضلة عبر الأجهزة</string>
+</resources>

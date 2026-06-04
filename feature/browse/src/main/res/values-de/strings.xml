@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">Entdecken</string>
+    <string name="home_category_count">%d Stile</string>
+    <string name="browse_title">Hair Book</string>
+    <string name="browse_men">Männer</string>
+    <string name="browse_women">Frauen</string>
+    <string name="browse_search">Frisuren suchen…</string>
+    <string name="browse_filter_all">Alle</string>
+    <string name="browse_filter_curly">Lockig</string>
+    <string name="browse_filter_wavy">Wellig</string>
+    <string name="browse_filter_straight">Glatt</string>
+    <string name="browse_filter_short">Kurz</string>
+    <string name="browse_filter_medium">Mittel</string>
+    <string name="browse_filter_long">Lang</string>
+    <string name="category_fade">Fade</string>
+    <string name="category_undercut">Undercut</string>
+    <string name="category_bob">Bob</string>
+    <string name="category_curls">Locken</string>
+    <string name="category_taper">Taper</string>
+    <string name="category_layers">Stufen</string>
+    <string name="category_textured">Textur</string>
+    <string name="category_braids">Zöpfe</string>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="finder_title">مكتشف التسريحات</string>
+    <string name="finder_step">الخطوة %1$d من %2$d</string>
+    <string name="finder_question_gender">اختر مظهرك</string>
+    <string name="finder_question_face">ما شكل وجهك؟</string>
+    <string name="finder_question_texture">ما نوع شعرك؟</string>
+    <string name="finder_question_length">ما طول شعرك؟</string>
+    <string name="finder_question_thickness">ما كثافة شعرك؟</string>
+    <string name="finder_question_colour">ما لون شعرك؟</string>
+    <string name="finder_next">التالي</string>
+    <string name="finder_back">السابق</string>
+    <string name="finder_see_results">عرض النتائج</string>
+</resources>

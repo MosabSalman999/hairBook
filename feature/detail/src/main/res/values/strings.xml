@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detail_title">Style Detail</string>
+    <string name="detail_about">About this style</string>
+    <string name="detail_time_effort">Time &amp; Effort</string>
+    <string name="detail_time_label">Time</string>
+    <string name="detail_minutes">min</string>
+    <string name="detail_difficulty">Difficulty</string>
+    <string name="detail_products">Recommended Products</string>
+    <string name="detail_save">Save to Favourites</string>
+    <string name="detail_saved">Saved</string>
+</resources>
